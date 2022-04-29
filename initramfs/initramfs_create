@@ -51,6 +51,10 @@ cp static/mount.dynfilefs $INITRAMFS/bin/@mount.dynfilefs
 cp static/mount.httpfs2 $INITRAMFS/bin/@mount.httpfs2
 cp static/mount.ntfs-3g $INITRAMFS/bin/@mount.ntfs-3g
 cp static/blkid $INITRAMFS/bin
+# MLFS: Add required binaries to setup final init s6 system
+cp static/s6-linux-init-maker $INITRAMFS/bin
+cp static/s6-rmrf $INITRAMFS/bin
+
 chmod a+x $INITRAMFS/bin/*
 
 $INITRAMFS/bin/busybox | grep , | grep -v Copyright | tr "," " " | while read LINE; do
@@ -146,6 +150,10 @@ chmod a+x $INITRAMFS/shutdown
 ln -s ../init $INITRAMFS/bin/init
 cp ../livekitlib $INITRAMFS/lib/
 cp ../config $INITRAMFS/lib/
+# MLFS: Copy required users and groups
+# MLFS: for setting up the final s6 init system
+cp passwd $INITRAMFS/etc/
+cp group $INITRAMFS/etc/
 
 cd $INITRAMFS
 find . -print | cpio -o -H newc 2>/dev/null | xz -f --extreme --check=crc32 >$INITRAMFS.img

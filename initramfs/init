@@ -45,6 +45,9 @@ mount_bundles "$DATA" "$BUNDLES"
 # init aufs union, or setup overlayfs union
 init_union "$CHANGES" "$UNION" "$BUNDLES"
 
+# Remount overlayfs as rw
+mount $UNION -o remount,rw
+
 # add data to aufs union
 union_append_bundles "$BUNDLES" "$UNION"
                                                                                                                                                       debug_shell
@@ -57,8 +60,16 @@ fstab_create "$UNION" "$DATAMNT"
 # run user custom preinit
 user_preinit "$DATA" "$UNION"
 
+# MLFS: fix s6base
+s6-rmrf -rf $UNION/etc/s6/base
+s6-linux-init-maker -1  -t 2 -L -D default -f $UNION/etc/s6-linux-init/skel -p "/usr/bin:/usr/sbin:/bin:/sbin" \
+	-G "/sbin/agetty -L -8 tty1 115200" -c /etc/s6/base -u root -U utmp $UNION/etc/s6/base
+
 header "Live Kit done, starting $LIVEKITNAME"
 change_root "$UNION"
+
+# MLFS: new rootfs(/) should be rw
+mount -v / -o rw,remount
 
 header "!!ERROR occured, you shouldn't be here.!!"
 /bin/sh
