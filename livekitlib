@@ -170,7 +170,6 @@ modprobe_everything()
    refresh_devs
 }
 
-
 refresh_devs()
 {
    debug_log "refresh_devs" "$*"
@@ -179,7 +178,6 @@ refresh_devs()
    fi
    mdev -s
 }
-
 
 # make sure some devices are there
 init_devs()
@@ -883,6 +881,18 @@ change_root()
 
    # make sure important device files and directories are in union
    mkdir -p boot dev proc sys tmp media mnt run
+   
+   # MLFS: Copy /dev to new root ... until there is a way to restart
+   # udev on new root.
+   #/bin/s6-hiercopy /dev dev 
+
+   # MLFS: Mount dev so udev can start normally
+   mount -n -t devtmpfs devtmpfs dev
+
+   # MLFS: Fix groups in dev ... until there is a way to restart
+   # udev on new root.
+   /bin/fix-dev
+
    chmod 1777 tmp
    if [ ! -e dev/console ]; then mknod dev/console c 5 1; fi
    if [ ! -e dev/tty ]; then mknod dev/tty c 5 0; fi
@@ -890,6 +900,15 @@ change_root()
    if [ ! -e dev/tty1 ]; then mknod dev/tty1 c 4 1; fi
    if [ ! -e dev/null ]; then mknod dev/null c 1 3; fi
    if [ ! -e sbin/fsck.aufs ]; then ln -s /bin/true sbin/fsck.aufs; fi
+   # MLFS: check for missing mount points for udev:
+   if [ ! -e dev/shm ]; then mkdir dev/shm; fi
+   if [ ! -e dev/pts ]; then mkdir dev/pts; fi
+   # MLFS: check for missing tty's
+   if [ ! -e dev/tty2 ]; then mknod dev/tty2 c 4 1; fi
+   if [ ! -e dev/tty3 ]; then mknod dev/tty3 c 4 1; fi
+   if [ ! -e dev/tty4 ]; then mknod dev/tty4 c 4 1; fi
+   if [ ! -e dev/tty5 ]; then mknod dev/tty5 c 4 1; fi
+   if [ ! -e dev/tty6 ]; then mknod dev/tty6 c 4 1; fi
 
    # find chroot and init
    if [ -x bin/chroot -o -L bin/chroot ]; then  CHROOT=bin/chroot; fi
@@ -907,5 +926,6 @@ change_root()
    mkdir -p run/initramfs
    mount -n -o remount,ro aufs .
    pivot_root . run/initramfs
+   
    exec $CHROOT . $INIT < dev/console > dev/console 2>&1
 }
