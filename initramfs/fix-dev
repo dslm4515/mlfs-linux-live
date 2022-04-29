@@ -1,0 +1,49 @@
+#!/bin/sh
+   
+# MLFS: Fix groups & permissions in new dev
+
+   if [ -e dev/dri/card0 ]; then chgrp video dev/dri/card0 && chmod 0660 dev/dri/card0; fi
+   if [ -e dev/dri/renderD128 ]; then chgrp video dev/dri/renderD128 && chmod 0666 dev/dri/renderD128; fi
+   if [ -e dev/fb0 ]; then chgrp video dev/fb0 && chmod 0666 dev/fb0; fi
+   if [ -e dev/kfd ]; then chgrp video dev/kfd; fi
+   for f in 3 4 5
+   do
+           if [ -e dev/hidraw3 ]; then chgrp plugdev dev/hidraw3 && chmod 0660 dev/hidraw3; fi
+   done
+   for f in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18
+   do
+	   if [ -e /dev/input/event$f ]; then chgrp input dev/input/event$f && chmod 0660 dev/input/event$f; fi
+   done
+   if [ -e dev/input/mice ]; then chgrp input dev/input/mice; fi
+   if [ -e dev/input/mouse0 ]; then chgrp input dev/input/mouse0; fi
+   if [ -e dev/input/mouse1 ]; then chgrp input dev/input/mouse1; fi
+   for f in 0 1 2 3 4 5 6 7 8
+   do
+	   if [ -e dev/loop$f ]; then chgrp disk dev/loop$f && chmod 0660 dev/loop$f; fi
+   done
+   if [ -e dev/loop-control ]; then chgrp disk dev/loop-control; fi
+   if [ -e dev/port ]; then chgrp kmem  dev/port; fi
+   if [ -e dev/mem ]; then chgrp kmem  dev/mem; fi
+   for f in 1 2 3 4 5 6 
+   do
+	   if [ -e dev/tty$f ]; then chgrp tty dev/tty$f && chmod 0620 dev/tty$f; fi
+	   if [ -e dev/vcs$f ]; then chgrp tty dev/vcs$f && chmod 0660 dev/vcs$f; fi
+	   if [ -e dev/vcsa$f ]; then chgrp tty dev/vcsa$f && chmod 0660 dev/vcsa$f; fi
+	   if [ -e dev/vcsu$f ]; then chgrp tty dev/vcsu$f && chmod 0660 dev/vcsu$f; fi
+	   
+   done
+   if [ -e dev/tty0 ]; then chgrp tty dev/tty0 && chmod 0620 dev/tty0; fi
+   if [ -e dev/vcs ]; then chgrp tty dev/vcs && chmod 0620 dev/vcs; fi
+   if [ -e dev/vcsa ]; then chgrp tty dev/vcsa && chmod 0620 dev/vcsa; fi
+   if [ -e dev/vcsu ]; then chgrp tty dev/vcsu  && chmod 0620 dev/vcsu; fi
+   if [ -e dev/ptx ]; then chgrp tty dev/ptx  && chmod 0666 dev/ptc; fi
+   if [ -e dev/pts/0 ]; then chgrp tty dev/pts/0 && chmod 0620 dev/pts/0; fi
+   if [ -e dev/pts/1 ]; then chgrp tty dev/pts/1 && chmod 0620 dev/pts/1; fi
+   for f in 1 2 3 
+   do
+	   if [ -e dev/ttyS$f ]; then chgrp dialout dev/ttyS$f && chmod 0620 dev/ttyS$f; fi
+   done
+   chgrp audio dev/snd/*
+   chmod 0660  dev/snd/*
+   if [ -e dev/snd/seq ]; then chgrp root dev/snd/seq; fi
+   

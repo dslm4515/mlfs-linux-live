@@ -54,6 +54,8 @@ cp static/blkid $INITRAMFS/bin
 # MLFS: Add required binaries to setup final init s6 system
 cp static/s6-linux-init-maker $INITRAMFS/bin
 cp static/s6-rmrf $INITRAMFS/bin
+# MLFS: Add script to fix /dev
+cp fix-dev $INITRAMFS/bin/
 
 chmod a+x $INITRAMFS/bin/*
 
