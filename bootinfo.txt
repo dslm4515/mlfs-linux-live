@@ -4,21 +4,28 @@
 #
 # Lines containing # are ignored
 #
-Thank you for using mylinux!
+Thank you for using Live Kit!
 If you are reading this from a CD, it is already bootable.
 Steps to make it bootable from your USB device are following:
 
-1) Copy the entire /mylinux/ directory to your USB drive.
-   If you are using Windows, you will get for example E:\mylinux\
+** This assumes LIVEKITNAME=mlfslive was set when building  **
+
+1) Copy the entire /mlfslive directory to your USB drive.
+   If you are using Windows, you will get for example E:\mlfslive\
    You probably already did this - just make sure you are on your
    USB drive now and not on your local harddisk.
+   i.e. cp -ra /tmp/mlfslivedata-18958/mlfslive /mnt/usb/
 
-2) Now navigate to directory /mylinux/boot/ on your USB drive.
+2) Now navigate to directory /mlfslive/boot/ on your USB drive.
    In Windows, it will be E:\mylinux\boot\ for example.
    Use explorer or any other file manager for this task.
 
 3) While you're in the boot directory, locate file bootinst.bat
    Run it by doubleclicking it. It will setup your USB to boot.
+   Under linux, execute bootinst.sh.
+
+4) Make sure the kernel image in directory /mlfslive/boot/ matches
+   the boot entries in /mlfslive/boot/syslinux.cfg
 
 -- That's it. Your USB device is now ready to boot mylinux.
 -- You can safely delete this file (readme.txt), it's not needed.
