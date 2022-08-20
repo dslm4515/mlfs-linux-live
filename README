@@ -11,7 +11,7 @@ with the purpose of creating a Live Kit from an existing preinstalled
 Musl Linux from Scatch build.
 
 A lot of changes were made as the MLFS I build use skarnet's s6 & s6-rc.
-Therefor the main branch will be s6-s6rc. I have not tested the original
+Therefore the main branch will be s6-s6rc. I have not tested the original
 Linux Live Kit on an MLFS build that uses SysVinit or any other inits.
 
 Note:
